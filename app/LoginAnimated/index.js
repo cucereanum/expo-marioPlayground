@@ -17,6 +17,8 @@ import Animated, {
   withRepeat,
   withSpring,
   withDelay,
+  interpolate,
+  Extrapolation,
 } from "react-native-reanimated";
 
 import CloudOne from "./components.js/CloudOne";
@@ -25,6 +27,7 @@ import CloudThree from "./components.js/CloudThree";
 import CloudFour from "./components.js/CloudFour";
 import CloudSix from "./components.js/CloudSix";
 import CloudFive from "./components.js/CloudFive";
+import PlaneSvg from "./PlaneSvg";
 
 const LoginAnimated = () => {
   const rotation = useSharedValue(0);
@@ -97,6 +100,54 @@ const LoginAnimated = () => {
     );
   }, []);
 
+  const planeTranslateX = useSharedValue(0);
+
+  const planeAnimatedStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(
+      planeTranslateX.value,
+      [0, 50, 100],
+      [-200, -100, 100],
+      Extrapolation.EXTEND
+    );
+    const translateY = interpolate(
+      planeTranslateX.value,
+      [0, 50, 100],
+      [-100, -50, 0],
+      Extrapolation.EXTEND
+    );
+    const scale = interpolate(
+      planeTranslateX.value,
+      [0, 50, 100],
+      [0.25, 0.5, 1],
+      Extrapolation.EXTEND
+    );
+
+    const opacity = interpolate(
+      planeTranslateX.value,
+      [0, 50, 100],
+      [0.1, 0.5, 1],
+      Extrapolation.EXTEND
+    );
+
+    const scaleX = interpolate(
+      planeTranslateX.value,
+      [0, 50, 100],
+      [-1, -1, -1],
+      Extrapolation.EXTEND
+    );
+    return {
+      transform: [{ translateX }, { translateY }, { scale }, { scaleX }],
+      opacity,
+    };
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      planeTranslateX.value = withTiming(100, {
+        duration: 4000,
+      });
+    }, 1000);
+  }, []);
   return (
     <View style={styles.container}>
       <Animated.View
@@ -116,6 +167,7 @@ const LoginAnimated = () => {
       <CloudFour />
       <CloudFive />
       <CloudSix />
+
       <Animated.View
         style={[
           {
@@ -136,6 +188,18 @@ const LoginAnimated = () => {
           heightStyle,
         ]}
       >
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              top: -60,
+              zIndex: 100,
+            },
+            planeAnimatedStyle,
+          ]}
+        >
+          <PlaneSvg width={100} height={100} />
+        </Animated.View>
         <Text
           style={{
             fontSize: 32,
