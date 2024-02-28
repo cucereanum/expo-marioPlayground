@@ -105,41 +105,30 @@ const LoginAnimated = () => {
   const planeAnimatedStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       planeTranslateX.value,
-      [0, 50, 100],
-      [-200, -100, 100],
-      Extrapolation.EXTEND
+      [0, 25, 50, 100, 105, 150, 175, 200],
+      [400, 200, 0, -300, -350, -100, 0, 120]
     );
     const translateY = interpolate(
       planeTranslateX.value,
-      [0, 50, 100],
-      [-100, -50, 0],
-      Extrapolation.EXTEND
+      [0, 25, 50, 100, 105, 150, 175, 200],
+      [-200, -200, -180, -150, -50, -25, 0, 0]
     );
     const scale = interpolate(
       planeTranslateX.value,
-      [0, 50, 100],
-      [0.01, 0.5, 1],
-      Extrapolation.EXTEND
+      [0, 50, 100, 105, 150, 200],
+      [0.3, 0.3, 0.3, 0.5, 0.8, 1]
     );
-
-    // const opacity = interpolate(
-    //   planeTranslateX.value,
-    //   [0, 50, 100],
-    //   [0.1, 0.5, 1],
-    //   Extrapolation.EXTEND
-    // );
 
     const scaleX = interpolate(
       planeTranslateX.value,
-      [0, 50, 100],
-      [-1, -1, -1],
-      Extrapolation.EXTEND
+      [0, 50, 100, 105, 150, 200],
+      [1, 1, 1, -1, -1, -1]
     );
 
     const rotateZ = interpolate(
       planeTranslateX.value,
-      [0, 50, 90, 100],
-      [0, 30, 30, 0],
+      [0, 150, 200],
+      [0, 30, 0],
       Extrapolation.EXTEND
     );
 
@@ -149,23 +138,71 @@ const LoginAnimated = () => {
         { translateY },
         { scale },
         { scaleX },
-        {
-          rotateZ: `${rotateZ}deg`,
-        },
-        {
-          perspective: 1000,
-        },
+        { rotateZ: `${rotateZ}deg` },
       ],
     };
   });
 
   useEffect(() => {
     setTimeout(() => {
-      planeTranslateX.value = withTiming(100, {
-        duration: 4000,
+      planeTranslateX.value = withTiming(200, {
+        duration: 10000,
       });
-    }, 3000);
+    }, 2000);
   }, []);
+
+  const handlePress = () => {
+    planeTranslateX.value = withTiming(0);
+    setTimeout(() => {
+      planeTranslateX.value = withTiming(200, {
+        duration: 10000,
+      });
+    }, 2000);
+
+    translateY.value = withTiming(heightSize);
+    translateX.value = withTiming(-100);
+    rotation.value = withTiming(0);
+    opacityLogin.value = withTiming(0);
+    opacitySignInApple.value = withTiming(0);
+
+    setTimeout(() => {
+      translateY.value = withDelay(
+        1000,
+        withSpring(0, {
+          damping: 12,
+          stiffness: 100,
+          overshootClamping: false,
+          restDisplacementThreshold: 0.01,
+          restSpeedThreshold: 2,
+        })
+      );
+
+      rotation.value = withRepeat(
+        withTiming(360, {
+          duration: 40000,
+          easing: Easing.linear,
+          loop: -1,
+        }),
+        1000
+      );
+      translateX.value = withRepeat(
+        withTiming(widthSize, {
+          duration: 30000,
+          easing: Easing.linear,
+          loop: -1,
+          reset: true, // Reset the animation to the initial value when it's finished
+        }),
+        1000
+      );
+
+      opacityLogin.value = withDelay(1200, withTiming(1, { duration: 500 }));
+      opacitySignInApple.value = withDelay(
+        1400,
+        withTiming(1, { duration: 500 })
+      );
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -258,12 +295,13 @@ const LoginAnimated = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={handlePress}
         >
           <Text
             style={{
               letterSpacing: 5,
               color: "#fff",
-              fontSize: 18,
+              fontSize: 20,
               fontFamily: "JosefinSlab_700Bold",
             }}
           >
