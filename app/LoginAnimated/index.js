@@ -118,16 +118,16 @@ const LoginAnimated = () => {
     const scale = interpolate(
       planeTranslateX.value,
       [0, 50, 100],
-      [0.25, 0.5, 1],
+      [0.01, 0.5, 1],
       Extrapolation.EXTEND
     );
 
-    const opacity = interpolate(
-      planeTranslateX.value,
-      [0, 50, 100],
-      [0.1, 0.5, 1],
-      Extrapolation.EXTEND
-    );
+    // const opacity = interpolate(
+    //   planeTranslateX.value,
+    //   [0, 50, 100],
+    //   [0.1, 0.5, 1],
+    //   Extrapolation.EXTEND
+    // );
 
     const scaleX = interpolate(
       planeTranslateX.value,
@@ -135,9 +135,27 @@ const LoginAnimated = () => {
       [-1, -1, -1],
       Extrapolation.EXTEND
     );
+
+    const rotateZ = interpolate(
+      planeTranslateX.value,
+      [0, 50, 90, 100],
+      [0, 30, 30, 0],
+      Extrapolation.EXTEND
+    );
+
     return {
-      transform: [{ translateX }, { translateY }, { scale }, { scaleX }],
-      opacity,
+      transform: [
+        { translateX },
+        { translateY },
+        { scale },
+        { scaleX },
+        {
+          rotateZ: `${rotateZ}deg`,
+        },
+        {
+          perspective: 1000,
+        },
+      ],
     };
   });
 
@@ -146,7 +164,7 @@ const LoginAnimated = () => {
       planeTranslateX.value = withTiming(100, {
         duration: 4000,
       });
-    }, 1000);
+    }, 3000);
   }, []);
   return (
     <View style={styles.container}>
