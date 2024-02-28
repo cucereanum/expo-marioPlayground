@@ -87,8 +87,6 @@ const LoginAnimated = () => {
       withTiming(widthSize, {
         duration: 30000,
         easing: Easing.linear,
-        loop: -1,
-        reset: true, // Reset the animation to the initial value when it's finished
       }),
       1000
     );
@@ -128,8 +126,7 @@ const LoginAnimated = () => {
     const rotateZ = interpolate(
       planeTranslateX.value,
       [0, 150, 200],
-      [0, 30, 0],
-      Extrapolation.EXTEND
+      [0, 30, 0]
     );
 
     return {
@@ -148,7 +145,7 @@ const LoginAnimated = () => {
       planeTranslateX.value = withTiming(200, {
         duration: 10000,
       });
-    }, 2000);
+    }, 500);
   }, []);
 
   const handlePress = () => {
@@ -189,8 +186,6 @@ const LoginAnimated = () => {
         withTiming(widthSize, {
           duration: 30000,
           easing: Easing.linear,
-          loop: -1,
-          reset: true, // Reset the animation to the initial value when it's finished
         }),
         1000
       );
