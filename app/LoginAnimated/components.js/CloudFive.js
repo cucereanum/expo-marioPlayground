@@ -12,6 +12,7 @@ import CloudSvg from "./../CloudSvg";
 
 const CloudFive = () => {
   const widthSize = Dimensions.get("screen").width;
+  const heightSize = Dimensions.get("screen").height;
 
   const translateX = useSharedValue(-100);
   const animatedStyle = useAnimatedStyle(() => {
@@ -33,7 +34,15 @@ const CloudFive = () => {
   }, []);
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          bottom: heightSize * 1.2,
+        },
+        animatedStyle,
+      ]}
+    >
       <CloudSvg width={110} />
     </Animated.View>
   );
@@ -44,7 +53,7 @@ export default CloudFive;
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 160,
+
     left: 0,
     width: "100%",
   },

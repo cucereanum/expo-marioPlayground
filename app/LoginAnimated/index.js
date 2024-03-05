@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  Image,
 } from "react-native";
 import SunSvg from "./SunSvg";
 import * as AppleAuthentication from "expo-apple-authentication";
@@ -28,6 +30,7 @@ import CloudFour from "./components.js/CloudFour";
 import CloudSix from "./components.js/CloudSix";
 import CloudFive from "./components.js/CloudFive";
 import PlaneSvg from "./PlaneSvg";
+import BackgroundImg from "../../assets/background.png";
 
 const LoginAnimated = () => {
   const rotation = useSharedValue(0);
@@ -36,11 +39,14 @@ const LoginAnimated = () => {
   const opacitySignInApple = useSharedValue(0);
 
   const [darkTheme, setDarkTheme] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const widthSize = Dimensions.get("screen").width;
   const heightSize = Dimensions.get("screen").height;
 
   const translateY = useSharedValue(heightSize);
+
+  const scrollRef = useRef();
 
   const heightStyle = useAnimatedStyle(() => {
     return {
@@ -143,11 +149,18 @@ const LoginAnimated = () => {
   });
 
   useEffect(() => {
+    if (scrollRef.current) {
+      setLoading(true);
+      setTimeout(() => {
+        scrollRef.current.scrollToEnd({ animated: true });
+        setLoading(false);
+      }, 1000);
+    }
     setTimeout(() => {
       planeTranslateX.value = withTiming(200, {
         duration: 10000,
       });
-    }, 500);
+    }, 5500);
   }, []);
 
   const handlePress = () => {
@@ -207,139 +220,196 @@ const LoginAnimated = () => {
         backgroundColor: darkTheme ? "#001A5C" : "#CCF9FF",
       }}
     >
-      <Animated.View
-        style={[
-          {
-            marginTop: 100,
-          },
-          animatedStyle,
-        ]}
+      <ScrollView
+        ref={scrollRef}
+        contentContainerStyle={{
+          width: "100%",
+          alignItems: "center",
+          height: heightSize * 2,
+        }}
+        scrollEnabled={false}
       >
-        <SunSvg width={200} height={200} />
-      </Animated.View>
+        {!loading && (
+          <Animated.View
+            style={[
+              {
+                marginTop: 100,
+              },
+              animatedStyle,
+            ]}
+          >
+            <SunSvg width={200} height={200} />
+          </Animated.View>
+        )}
+        <CloudOne />
+        <CloudTwo />
+        <CloudThree />
+        <CloudFour />
+        <CloudFive />
+        <CloudSix />
 
-      <CloudOne />
-      <CloudTwo />
-      <CloudThree />
-      <CloudFour />
-      <CloudFive />
-      <CloudSix />
-
-      <Animated.View
-        style={[
-          {
-            marginTop: 40,
-            width: "90%",
-            paddingVertical: 40,
-            alignItems: "center",
-            paddingHorizontal: 30,
-            shadowColor: "#000",
-            backgroundColor: darkTheme ? "#CCF9FF" : "#CCF9FF", //99F3FF // rgb(190,247,255) // "#BEF7FF"
-            borderRadius: 10,
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowOpacity: 0.25,
-          },
-          heightStyle,
-        ]}
-      >
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              top: -60,
-              zIndex: 100,
-            },
-            planeAnimatedStyle,
-          ]}
-        >
-          <PlaneSvg width={100} height={100} />
-        </Animated.View>
-        <Text
+        {!loading && (
+          <>
+            <Animated.View
+              style={[
+                {
+                  width: "90%",
+                  paddingVertical: 40,
+                  alignItems: "center",
+                  shadowColor: "#000",
+                  borderRadius: 10,
+                },
+                heightStyle,
+              ]}
+            >
+              <Animated.View
+                style={[
+                  {
+                    position: "absolute",
+                    top: -30,
+                    zIndex: 100,
+                  },
+                  planeAnimatedStyle,
+                ]}
+              >
+                <PlaneSvg width={100} height={100} />
+              </Animated.View>
+              <Text
+                style={{
+                  fontSize: 34,
+                  fontFamily: "JosefinSlab_700Bold",
+                  marginBottom: 20,
+                }}
+              >
+                Sign in to your account
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Email"
+                placeholderTextColor="#000"
+              />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Password"
+                placeholderTextColor="#000"
+                secureTextEntry
+              />
+            </Animated.View>
+            <Animated.View
+              style={[
+                loginAnimateStyle,
+                {
+                  width: "100%",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "90%",
+                  height: 50,
+                  backgroundColor: "#00B4CC",
+                  marginTop: 50,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={handlePress}
+              >
+                <Text
+                  style={{
+                    letterSpacing: 5,
+                    color: "#fff",
+                    fontSize: 20,
+                    fontFamily: "JosefinSlab_700Bold",
+                  }}
+                >
+                  LOGIN
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+            <Animated.View
+              style={[
+                signInAnimateStyle,
+                {
+                  width: "100%",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  fontFamily: "JosefinSlab_700Bold",
+                  fontSize: 25,
+                  color: "#000",
+                  marginVertical: 10,
+                }}
+              >
+                or
+              </Text>
+              <AppleAuthentication.AppleAuthenticationButton
+                buttonType={
+                  AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+                }
+                buttonStyle={
+                  AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+                }
+                cornerRadius={5}
+                style={{
+                  width: "90%",
+                  height: 50,
+                }}
+              />
+            </Animated.View>
+          </>
+        )}
+        <View
           style={{
-            fontSize: 32,
-            fontFamily: "JosefinSlab_700Bold",
-            marginBottom: 20,
-          }}
-        >
-          Sign in to your account
-        </Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          placeholderTextColor="#000"
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          placeholderTextColor="#000"
-          secureTextEntry
-        />
-      </Animated.View>
-      <Animated.View
-        style={[
-          loginAnimateStyle,
-          {
+            position: "absolute",
+            bottom: 0,
             width: "100%",
-            alignItems: "center",
-          },
-        ]}
-      >
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            height: 50,
-            backgroundColor: "#00B4CC",
-            marginTop: 30,
-            borderRadius: 6,
-            alignItems: "center",
-            justifyContent: "center",
           }}
-          onPress={handlePress}
         >
-          <Text
+          <Image
+            source={BackgroundImg}
             style={{
-              letterSpacing: 5,
-              color: "#fff",
-              fontSize: 20,
-              fontFamily: "JosefinSlab_700Bold",
+              width: "100%",
+            }}
+            resizeMode="cover"
+          />
+          <TouchableOpacity
+            style={{
+              width: "90%",
+              height: 50,
+              backgroundColor: "rgba(35,90,48,0.7)",
+              marginTop: 30,
+              borderRadius: 6,
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              bottom: 150,
+              alignSelf: "center",
+            }}
+            onPress={() => {
+              scrollRef.current.scrollTo({
+                y: 0,
+                animated: true,
+              });
             }}
           >
-            LOGIN
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
-      <Animated.View
-        style={[
-          signInAnimateStyle,
-          {
-            width: "100%",
-            alignItems: "center",
-          },
-        ]}
-      >
-        <Text
-          style={{
-            fontFamily: "JosefinSlab_700Bold",
-            fontSize: 25,
-            color: "#000",
-            marginVertical: 10,
-          }}
-        >
-          or
-        </Text>
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-          cornerRadius={5}
-          style={{
-            width: "90%",
-            height: 50,
-          }}
-        />
-      </Animated.View>
+            <Text
+              style={{
+                letterSpacing: 5,
+                color: "#fff",
+                fontSize: 20,
+                fontFamily: "JosefinSlab_700Bold",
+              }}
+            >
+              LET'S GET STARTED
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -348,7 +418,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#BEF7FF",
-    alignItems: "center",
   },
   textInput: {
     width: "100%",
@@ -356,6 +425,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 4,
     fontFamily: "JosefinSlab_600SemiBold",
+    backgroundColor: "#BEF7FF",
     paddingHorizontal: 15,
     fontSize: 18,
     marginTop: 30,

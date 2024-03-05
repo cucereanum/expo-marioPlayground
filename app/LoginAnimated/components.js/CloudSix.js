@@ -12,6 +12,7 @@ import CloudSvg from "./../CloudSvg";
 
 const CloudSix = () => {
   const widthSize = Dimensions.get("screen").width;
+  const heightSize = Dimensions.get("screen").height;
 
   const translateX = useSharedValue(-300);
   const animatedStyle = useAnimatedStyle(() => {
@@ -26,14 +27,22 @@ const CloudSix = () => {
         duration: 50000,
         easing: Easing.linear,
         loop: -1,
-        reset: true, // Reset the animation to the initial value when it's finished
+        reset: true,
       }),
       1000
     );
   }, []);
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          bottom: heightSize * 0.9,
+        },
+        animatedStyle,
+      ]}
+    >
       <CloudSvg width={300} height={250} />
     </Animated.View>
   );
@@ -44,7 +53,6 @@ export default CloudSix;
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: -100,
     left: 0,
     width: "100%",
   },
