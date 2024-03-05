@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -34,6 +34,8 @@ const LoginAnimated = () => {
   const translateX = useSharedValue(-100);
   const opacityLogin = useSharedValue(0);
   const opacitySignInApple = useSharedValue(0);
+
+  const [darkTheme, setDarkTheme] = useState(false);
 
   const widthSize = Dimensions.get("screen").width;
   const heightSize = Dimensions.get("screen").height;
@@ -199,7 +201,12 @@ const LoginAnimated = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        backgroundColor: darkTheme ? "#001A5C" : "#CCF9FF",
+      }}
+    >
       <Animated.View
         style={[
           {
@@ -227,7 +234,7 @@ const LoginAnimated = () => {
             alignItems: "center",
             paddingHorizontal: 30,
             shadowColor: "#000",
-            backgroundColor: "#CCF9FF", //99F3FF // rgb(190,247,255) // "#BEF7FF"
+            backgroundColor: darkTheme ? "#CCF9FF" : "#CCF9FF", //99F3FF // rgb(190,247,255) // "#BEF7FF"
             borderRadius: 10,
             shadowOffset: {
               width: 1,

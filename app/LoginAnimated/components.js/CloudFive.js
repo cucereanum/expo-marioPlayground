@@ -26,7 +26,7 @@ const CloudFive = () => {
         duration: 15000,
         easing: Easing.linear,
         loop: -1,
-        reset: true, // Reset the animation to the initial value when it's finished
+        reset: true,
       }),
       1000
     );

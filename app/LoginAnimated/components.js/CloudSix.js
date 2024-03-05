@@ -13,7 +13,7 @@ import CloudSvg from "./../CloudSvg";
 const CloudSix = () => {
   const widthSize = Dimensions.get("screen").width;
 
-  const translateX = useSharedValue(-100);
+  const translateX = useSharedValue(-300);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: translateX.value }],

@@ -13,7 +13,7 @@ import CloudSvg from "./../CloudSvg";
 const CloudOne = () => {
   const widthSize = Dimensions.get("screen").width;
 
-  const translateX = useSharedValue(-100);
+  const translateX = useSharedValue(-200);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: translateX.value }],
@@ -26,7 +26,7 @@ const CloudOne = () => {
         duration: 30000,
         easing: Easing.linear,
         loop: -1,
-        reset: true, // Reset the animation to the initial value when it's finished
+        reset: true,
       }),
       1000
     );
